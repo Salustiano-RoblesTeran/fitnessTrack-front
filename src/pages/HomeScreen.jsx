@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import NuevoEjercicioModal from '../components/NuevoEjercicioModal'; // Asegúrate de importar tu modal
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate para la navegación
+import NuevoEjercicioModal from '../components/NuevoEjercicioModal';
 
 const HomeScreen = () => {
     const [diaSeleccionado, setDiaSeleccionado] = useState('');
     const [ejercicios, setEjercicios] = useState([]);
     const [loading, setLoading] = useState(false);
     const [dias] = useState(['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']);
-    const [modalShow, setModalShow] = useState(false); // Estado para mostrar/ocultar el modal
+    const [modalShow, setModalShow] = useState(false);
+    
+    const navigate = useNavigate(); // Hook para la navegación
 
     useEffect(() => {
         if (diaSeleccionado) {
@@ -23,7 +26,7 @@ const HomeScreen = () => {
             return;
         }
 
-        setLoading(true);  // Activa el spinner de carga
+        setLoading(true); // Activa el spinner de carga
 
         try {
             const response = await fetch(`http://localhost:3000/api/ejercicio?dia=${dia}`, {
@@ -52,6 +55,10 @@ const HomeScreen = () => {
         setEjercicios([...ejercicios, ejercicio]);
     };
 
+    const handleEjercicioClick = (ejercicioId) => {
+        navigate(`/ejercicio/${ejercicioId}`);  // Redirige al ejercicio con su ID
+    };
+
     return (
         <div className="container mt-5">
             <h2 className="text-center mb-4">Rutina Semanal</h2>
@@ -78,10 +85,14 @@ const HomeScreen = () => {
             ) : ejercicios.length > 0 ? (
                 <ul className="list-group">
                     {ejercicios.map((ejercicio) => (
-                        <li key={ejercicio._id} className="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-center">
+                        <li 
+                            key={ejercicio._id} 
+                            className="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-center list-group-item-action"
+                            onClick={() => handleEjercicioClick(ejercicio._id)} // Maneja el clic para redirigir
+                        >
                             <div>
                                 <span className="fw-bold">{ejercicio.nombreEjercicio}</span>
-                                <p className="d-block text-muted font-bold">{ejercicio.grupoMusculares}</p> {/* Grupo muscular en gris */}
+                                <p className="d-block text-muted font-bold">{ejercicio.grupoMusculares}</p>
                             </div>
                             <span className="text-muted">
                                 {ejercicio.series} x {ejercicio.repeticiones} - {ejercicio.historialPesos[ejercicio.historialPesos.length - 1]?.peso} kg
@@ -100,12 +111,11 @@ const HomeScreen = () => {
             </div>
 
             <NuevoEjercicioModal
-            show={modalShow}
-            handleClose={() => setModalShow(false)} // Cerrar el modal
-            agregarEjercicio={agregarEjercicio}   // Agregar ejercicio a la lista
-            diaSeleccionado={diaSeleccionado}     // Pasar el día seleccionado
-        />
-
+                show={modalShow}
+                handleClose={() => setModalShow(false)}
+                agregarEjercicio={agregarEjercicio}
+                diaSeleccionado={diaSeleccionado}
+            />
         </div>
     );
 };
