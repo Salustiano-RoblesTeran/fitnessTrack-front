@@ -3,15 +3,20 @@ import { useParams } from 'react-router-dom';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import ActualizarPesoModal from '../components/ActualizarPesoModal';
+import EditarEjercicioModal from '../components/EditarEjercicioModal'; // Asegúrate de crear este modal
+import { Dropdown } from 'react-bootstrap';
+import { PencilSquare, Trash, ThreeDots } from 'react-bootstrap-icons'; // Añadir los íconos necesarios
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const EjercicioScreen = () => {
-    const { id } = useParams();
+    const { id } = useParams(); // Obtener el ejercicioId de la URL
     const [ejercicio, setEjercicio] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false); // Estado para el modal de edición
 
+    // Definir la función dentro de useEffect para evitar errores de alcance
     useEffect(() => {
         const obtenerEjercicio = async () => {
             const token = localStorage.getItem('x-token');
@@ -46,14 +51,35 @@ const EjercicioScreen = () => {
             }
         };
 
-        obtenerEjercicio();
-    }, [id]);
+        obtenerEjercicio(); // Llamada a la función después de definirla
+    }, [showModal, showEditModal]);
 
-    const actualizarPeso = (nuevoPeso) => {
-        setEjercicio({
-            ...ejercicio,
-            historialPesos: [...ejercicio.historialPesos, nuevoPeso]
-        });
+    const eliminarEjercicio = async () => {
+        const token = localStorage.getItem('x-token');
+
+        if (!token) {
+            console.error('No hay token disponible');
+            window.location.href = '/login';
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:3000/api/ejercicio/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'x-token': token,
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al eliminar el ejercicio');
+            }
+
+            // Redirigir o hacer otra acción tras eliminar el ejercicio
+            window.location.href = '/ejercicios'; // O alguna otra ruta
+        } catch (error) {
+            console.error('Error al eliminar el ejercicio:', error.message);
+        }
     };
 
     if (loading) {
@@ -67,7 +93,7 @@ const EjercicioScreen = () => {
     const { nombreEjercicio, grupoMusculares, dia, series, repeticiones, historialPesos } = ejercicio;
 
     // Ordenar los datos por fecha
-    const sortedPesos = historialPesos.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+    const sortedPesos = (historialPesos || []).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
     const data = {
         labels: sortedPesos.map(peso =>
@@ -129,18 +155,37 @@ const EjercicioScreen = () => {
                 <div className="col-md-8">
                     {/* Tarjeta con los detalles del ejercicio */}
                     <div className="card shadow-lg mb-4">
-                        <div className="card-header bg-info text-white">
-                            <h5 className="card-title mb-0">{nombreEjercicio}</h5>
-                        </div>
                         <div className="card-body">
-                            <h6 className="text-muted mb-3">Detalles del Ejercicio</h6>
+                            <div className="d-flex justify-content-between align-items-center">
+                                {/* Titulo sin fondo y los tres puntitos a la derecha */}
+                                <h5 className="card-title mb-0">{nombreEjercicio}</h5>
+                                <Dropdown align="end">
+                                    <Dropdown.Toggle variant="link" id="dropdown-basic" className="btn btn-link text-secondary">
+                                        <ThreeDots size={20} />
+                                    </Dropdown.Toggle>
+
+                                    <Dropdown.Menu>
+                                        {/* Opción Editar que abre el modal */}
+                                        <Dropdown.Item onClick={() => setShowEditModal(true)}>
+                                            <PencilSquare style={{ marginRight: '8px' }} />
+                                            Editar
+                                        </Dropdown.Item>
+
+                                        {/* Opción Eliminar ejercicio */}
+                                        <Dropdown.Item onClick={eliminarEjercicio} className="text-danger">
+                                            <Trash style={{ marginRight: '8px' }} />
+                                            Eliminar ejercicio
+                                        </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </div>
+                            <p className="text-muted mb-3">Grupo muscular: {grupoMusculares}</p>
+                            <p className="text-muted mb-3">Día: {dia}</p>
                             <div className="row">
                                 <div className="col-6">
-                                    <p><strong>Grupo muscular:</strong> {grupoMusculares}</p>
-                                    <p><strong>Día:</strong> {dia}</p>
+                                    <p><strong>Series:</strong> {series}</p>
                                 </div>
                                 <div className="col-6">
-                                    <p><strong>Series:</strong> {series}</p>
                                     <p><strong>Repeticiones:</strong> {repeticiones}</p>
                                 </div>
                             </div>
@@ -170,8 +215,14 @@ const EjercicioScreen = () => {
             <ActualizarPesoModal
                 show={showModal}
                 handleClose={() => setShowModal(false)}
-                actualizarPeso={actualizarPeso}
-                ejercicioId={id}
+                ejercicioId={id} // Enviar el id directamente desde la URL
+            />
+
+            {/* Modal para editar ejercicio */}
+            <EditarEjercicioModal
+                show={showEditModal}
+                handleClose={() => setShowEditModal(false)}
+                ejercicio={ejercicio} // Pasa el ejercicio para editar
             />
         </div>
     );

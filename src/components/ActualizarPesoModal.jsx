@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const ActualizarPesoModal = ({ show, handleClose, actualizarPeso, ejercicioId }) => {
+const ActualizarPesoModal = ({ show, handleClose, ejercicioId }) => {
     const [formData, setFormData] = useState({
         peso: '',
         fecha: new Date().toISOString().split('T')[0],  // Fecha del día
@@ -39,7 +39,6 @@ const ActualizarPesoModal = ({ show, handleClose, actualizarPeso, ejercicioId })
 
             const data = await response.json();
             if (response.ok) {
-                actualizarPeso(data);
                 handleClose();  // Cerrar el modal al guardar
             } else {
                 console.error('Error al actualizar el peso:', data.msg);
@@ -89,7 +88,7 @@ const ActualizarPesoModal = ({ show, handleClose, actualizarPeso, ejercicioId })
                         </div>
 
                         <div className="modal-footer">
-                            <button type="submit" className="btn btn-primary">Actualizar</button>
+                            <button type="submit" className="btn btn-primary">Agregar</button>
                             <button type="button" className="btn btn-secondary" onClick={handleClose}>Cancelar</button>
                         </div>
                     </form>
