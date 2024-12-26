@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-
 const LoginScreen = () => {
     const [correo, setCorreo] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);  // Estado de carga
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        setLoading(true);  // Iniciar el estado de carga
 
         try {
             const response = await fetch('http://localhost:3000/api/auth/login', {
@@ -28,13 +29,14 @@ const LoginScreen = () => {
             }
 
             const { token } = data;
-
-            // Guardar token e ID de usuario
             localStorage.setItem('token', token);
-            console.log(token)
+            console.log(token);
 
+            navigate('/');  // Redirigir a la pantalla principal
         } catch (error) {
             setError('Credenciales incorrectas. Intenta de nuevo.');
+        } finally {
+            setLoading(false);  // Termina el estado de carga
         }
     };
 
@@ -53,6 +55,7 @@ const LoginScreen = () => {
                             value={correo}
                             onChange={(e) => setCorreo(e.target.value)}
                             required
+                            disabled={loading}  // Desactivar input mientras carga
                         />
                     </div>
                     <div className="mb-3">
@@ -64,9 +67,20 @@ const LoginScreen = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
+                            disabled={loading}  // Desactivar input mientras carga
                         />
                     </div>
-                    <button type="submit" className="btn btn-primary w-100">Ingresar</button>
+                    <button
+                        type="submit"
+                        className="btn btn-primary w-100"
+                        disabled={loading}  // Desactivar botón mientras carga
+                    >
+                        {loading ? (
+                            <span className="spinner-border spinner-border-sm"></span>
+                        ) : (
+                            'Ingresar'
+                        )}
+                    </button>
                 </form>
             </div>
         </div>
