@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import NuevoEjercicioModal from '../components/NuevoEjercicioModal'; // Asegúrate de importar tu modal
 
 const HomeScreen = () => {
     const [diaSeleccionado, setDiaSeleccionado] = useState('');
     const [ejercicios, setEjercicios] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [dias] = useState(['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']);
+    const [dias] = useState(['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']);
+    const [modalShow, setModalShow] = useState(false); // Estado para mostrar/ocultar el modal
 
     useEffect(() => {
         if (diaSeleccionado) {
@@ -46,12 +48,8 @@ const HomeScreen = () => {
         }
     };
 
-    const handleNuevoEjercicio = () => {
-        window.location.href = '/nuevo-ejercicio';
-    };
-
-    const obtenerUltimoPeso = (historialPesos) => {
-        return historialPesos.length > 0 ? historialPesos[historialPesos.length - 1].peso : 'N/A';
+    const agregarEjercicio = (ejercicio) => {
+        setEjercicios([...ejercicios, ejercicio]);
     };
 
     return (
@@ -86,7 +84,7 @@ const HomeScreen = () => {
                                 <p className="d-block text-muted font-bold">{ejercicio.grupoMusculares}</p> {/* Grupo muscular en gris */}
                             </div>
                             <span className="text-muted">
-                                {ejercicio.series} x {ejercicio.repeticiones} - {obtenerUltimoPeso(ejercicio.historialPesos)} kg
+                                {ejercicio.series} x {ejercicio.repeticiones} - {ejercicio.historialPesos[ejercicio.historialPesos.length - 1]?.peso} kg
                             </span>
                         </li>
                     ))}
@@ -96,10 +94,18 @@ const HomeScreen = () => {
             )}
 
             <div className="d-flex justify-content-center mt-4">
-                <button className="btn btn-success px-5 py-2" onClick={handleNuevoEjercicio}>
+                <button className="btn btn-success px-5 py-2" onClick={() => setModalShow(true)}>
                     + Nuevo Ejercicio
                 </button>
             </div>
+
+            <NuevoEjercicioModal
+            show={modalShow}
+            handleClose={() => setModalShow(false)} // Cerrar el modal
+            agregarEjercicio={agregarEjercicio}   // Agregar ejercicio a la lista
+            diaSeleccionado={diaSeleccionado}     // Pasar el día seleccionado
+        />
+
         </div>
     );
 };
