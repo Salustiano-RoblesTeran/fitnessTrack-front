@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const LoginScreen = () => {
+const LoginScreen = ({cambiarLogin}) => {
     const [correo, setCorreo] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -33,6 +33,7 @@ const LoginScreen = () => {
             console.log(token);
 
             navigate('/');  // Redirigir a la pantalla principal
+            cambiarLogin();
         } catch (error) {
             setError('Credenciales incorrectas. Intenta de nuevo.');
         } finally {

@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
-import ActualizarPesoModal from '../components/ActualizarPesoModal';
-import EditarEjercicioModal from '../components/EditarEjercicioModal'; // Asegúrate de crear este modal
+import ActualizarPesoModal from '../components/modals/ActualizarPesoModal';
+import EditarEjercicioModal from '../components/modals/EditarEjercicioModal'; // Asegúrate de crear este modal
 import { Dropdown } from 'react-bootstrap';
 import { PencilSquare, Trash, ThreeDots } from 'react-bootstrap-icons'; // Añadir los íconos necesarios
+import EliminarEjercicioModal from '../components/modals/EliminarEjercicioModal';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -15,6 +16,7 @@ const EjercicioScreen = () => {
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false); // Estado para el modal de edición
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     // Definir la función dentro de useEffect para evitar errores de alcance
     useEffect(() => {
@@ -53,34 +55,6 @@ const EjercicioScreen = () => {
 
         obtenerEjercicio(); // Llamada a la función después de definirla
     }, [showModal, showEditModal]);
-
-    const eliminarEjercicio = async () => {
-        const token = localStorage.getItem('x-token');
-
-        if (!token) {
-            console.error('No hay token disponible');
-            window.location.href = '/login';
-            return;
-        }
-
-        try {
-            const response = await fetch(`http://localhost:3000/api/ejercicio/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'x-token': token,
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Error al eliminar el ejercicio');
-            }
-
-            // Redirigir o hacer otra acción tras eliminar el ejercicio
-            window.location.href = '/ejercicios'; // O alguna otra ruta
-        } catch (error) {
-            console.error('Error al eliminar el ejercicio:', error.message);
-        }
-    };
 
     if (loading) {
         return <p className="text-center">Cargando detalles del ejercicio...</p>;
@@ -172,7 +146,7 @@ const EjercicioScreen = () => {
                                         </Dropdown.Item>
 
                                         {/* Opción Eliminar ejercicio */}
-                                        <Dropdown.Item onClick={eliminarEjercicio} className="text-danger">
+                                        <Dropdown.Item onClick={() => setShowDeleteModal(true)} className="text-danger">
                                             <Trash style={{ marginRight: '8px' }} />
                                             Eliminar ejercicio
                                         </Dropdown.Item>
@@ -223,6 +197,12 @@ const EjercicioScreen = () => {
                 show={showEditModal}
                 handleClose={() => setShowEditModal(false)}
                 ejercicio={ejercicio} // Pasa el ejercicio para editar
+            />
+            {/* Modal para eliminar ejercicio */}
+            <EliminarEjercicioModal
+                show={showDeleteModal}
+                handleClose={() => setShowDeleteModal(false)}
+                ejercicioId={id} // Pasa el ejercicio para editar
             />
         </div>
     );
