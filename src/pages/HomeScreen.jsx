@@ -11,8 +11,10 @@ const HomeScreen = () => {
     const [loading, setLoading] = useState(false);
     const [modalShow, setModalShow] = useState(false);
     const [actividad, setActividad] = useState('');
-    const [distancia, setDistancia] = useState(0);
     const [distancias, setDistancias] = useState([]);
+    const [rango, setRango] = useState('ultimaSemana');
+    const [fechaInicio, setFechaInicio] = useState('');
+    const [fechaFin, setFechaFin] = useState('');
 
     const days = [
         { name: "Lun", fullName: "Lunes", key: "Lunes" },
@@ -83,36 +85,98 @@ const HomeScreen = () => {
         navigate(`/ejercicio/${ejercicioId}`);
     };
 
-    const agregarDistancia = () => {
-        if (distancia > 0) {
-            setDistancias([...distancias, distancia]);
-            setDistancia(0);
+    const obtenerDatosActividad = async () => {
+        const token = localStorage.getItem('x-token');
+
+        if (!token) {
+            console.error('No hay token disponible');
+            window.location.href = '/login';
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            const endpoint = actividad === 'Correr'
+                ? 'http://localhost:3000/api/actividad/correr'
+                : 'http://localhost:3000/api/actividad/ciclismo';
+
+            const response = await fetch(endpoint, {
+                method: 'GET',
+                headers: {
+                    'x-token': token,
+                },
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.msg || 'Error al obtener datos');
+            }
+
+            setDistancias(data.registros.map((registro) => ({
+                distancia: registro.distancia,
+                fecha: new Date(registro.fecha).toLocaleDateString()
+            })));
+        } catch (error) {
+            console.error('Error al obtener datos:', error.message);
+            setDistancias([]);
+        } finally {
+            setLoading(false);
         }
     };
 
+    useEffect(() => {
+        if (actividad) {
+            obtenerDatosActividad();
+        }
+    }, [actividad]);
+
     const data = {
-        labels: distancias.map((_, index) => `Sesión ${index + 1}`),
+        labels: distancias.map((registro) => registro.fecha),
         datasets: [
             {
-                label: actividad,
-                data: distancias,
-                backgroundColor: 'rgba(75, 192, 192, 0.6)'
-            }
-        ]
+                label: `${actividad} - Distancia (km)`,
+                data: distancias.map((registro) => registro.distancia),
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+            },
+        ],
+    };
+
+    // Función para manejar el cambio de rango
+    const handleRangoChange = (e) => {
+        setRango(e.target.value);
+        if (e.target.value === 'personalizado') {
+            setFechaInicio('');
+            setFechaFin('');
+        }
     };
 
     return (
         <div className="container mt-5">
             <h2 className="text-center mb-4">Rutina Semanal</h2>
 
-            <div className="d-flex overflow-auto mb-4">
+            {/* Botón para agregar ejercicio */}
+            <div className="text-center mb-4">
+                <button
+                    className="btn btn-success"
+                    onClick={() => setModalShow(true)}
+                >
+                    Agregar Nuevo Ejercicio
+                </button>
+            </div>
+
+            {/* Menú de días scrollable */}
+            <div className="d-flex justify-content-center mb-4" style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
                 {days.map((dia, index) => (
                     <button
                         key={index}
                         className={`btn me-2 ${diaSeleccionado === dia.name ? 'btn-primary' : 'btn-outline-primary'}`}
                         onClick={() => setDiaSeleccionado(dia.name)}
+                        style={{ minWidth: '80px' }}
                     >
-                        {dia.name}
+                        <span className="d-none d-md-inline">{dia.fullName}</span>
+                        <span className="d-inline d-md-none">{dia.name}</span>
                     </button>
                 ))}
             </div>
@@ -174,36 +238,64 @@ const HomeScreen = () => {
                         <div className="tab-content">
                             <div className="tab-pane fade show active">
                                 <h4>{actividad}</h4>
-                                <Bar data={data} />
-                                <div className="mt-4">
-                                    <input
-                                        type="number"
-                                        className="form-control mb-2"
-                                        placeholder="Agregar distancia (km)"
-                                        value={distancia}
-                                        onChange={(e) => setDistancia(parseFloat(e.target.value) || 0)}
-                                    />
-                                    <button className="btn btn-success" onClick={agregarDistancia}>Agregar Distancia</button>
+
+                                {/* Selector de rango */}
+                                <div className="mb-3" style={{ width: '250px', margin: '0 auto' }}>
+                                    <select 
+                                        className="form-select" 
+                                        value={rango} 
+                                        onChange={handleRangoChange}
+                                    >
+                                        <option value="ultimaSemana">Última Semana</option>
+                                        <option value="ultimoMes">Último Mes</option>
+                                        <option value="personalizado">Personalizado</option>
+                                    </select>
+                                </div>
+
+                                {/* Mostrar fechas solo si se elige 'Personalizado' */}
+                                <div className="d-flex gap-3 mb-3" style={{ justifyContent: 'center' }}>
+                                    {rango === 'personalizado' && (
+                                        <div style={{ width: '150px' }}>
+                                            <label>Fecha de Inicio</label>
+                                            <input 
+                                                type="date" 
+                                                className="form-control" 
+                                                value={fechaInicio} 
+                                                onChange={(e) => setFechaInicio(e.target.value)} 
+                                            />
+                                        </div>
+                                    )}
+
+                                    {rango === 'personalizado' && (
+                                        <div style={{ width: '150px' }}>
+                                            <label>Fecha de Fin</label>
+                                            <input 
+                                                type="date" 
+                                                className="form-control" 
+                                                value={fechaFin} 
+                                                onChange={(e) => setFechaFin(e.target.value)} 
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+
+
+                                <div className="mb-5" style={{ maxWidth: '800px', margin: '0 auto' }}>
+                                    <Bar data={data} options={{
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                    }} />
                                 </div>
                             </div>
                         </div>
                     )}
                 </div>
             )}
-
-            <div className="d-flex justify-content-center mt-4">
-                {diaSeleccionado && (
-                    <button className="btn btn-success px-5 py-2" onClick={() => setModalShow(true)}>
-                        + Nuevo Ejercicio
-                    </button>
-                )}
-            </div>
-
+            
             <NuevoEjercicioModal
                 show={modalShow}
                 handleClose={() => setModalShow(false)}
-                agregarEjercicio={agregarEjercicio}
-                diaSeleccionado={diaSeleccionado}
+                onSave={agregarEjercicio}
             />
         </div>
     );
