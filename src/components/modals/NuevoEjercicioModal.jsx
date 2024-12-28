@@ -10,8 +10,8 @@ const NuevoEjercicioModal = ({ show, handleClose, agregarEjercicio, diaSeleccion
         peso: '',
     });
 
-    const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
-    const gruposMusculares = ["Pecho (Pectorales)", "Espalda", "Piernas", "Hombros", "Bíceps", "Tríceps", "Core", "Pantorrilla (Gemelos)"];
+    const diasSemana = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"];
+    const gruposMusculares = ["Pecho (Pectorales)", "Espalda", "Piernas", "Hombros", "Biceps", "Tríceps", "Core", "Pantorrilla (Gemelos)"];
 
     // Limpiar los campos cuando se cierra el modal
     useEffect(() => {

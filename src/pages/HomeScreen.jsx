@@ -10,7 +10,7 @@ const HomeScreen = () => {
     const [ejercicios, setEjercicios] = useState([]);
     const [loading, setLoading] = useState(false);
     const [modalShow, setModalShow] = useState(false);
-    const [actividad, setActividad] = useState('');
+    const [actividad, setActividad] = useState('Correr'); // Actividad predeterminada
     const [distancias, setDistancias] = useState([]);
     const [rango, setRango] = useState('ultimaSemana');
     const [fechaInicio, setFechaInicio] = useState('');
@@ -38,8 +38,7 @@ const HomeScreen = () => {
 
     useEffect(() => {
         if (diaSeleccionado) {
-            const diaKey = days.find(d => d.name === diaSeleccionado)?.key;
-            if (diaKey) obtenerEjercicios(diaKey);
+            obtenerEjercicios(diaSeleccionado)
         }
     }, [diaSeleccionado]);
 
@@ -143,7 +142,6 @@ const HomeScreen = () => {
         ],
     };
 
-    // Función para manejar el cambio de rango
     const handleRangoChange = (e) => {
         setRango(e.target.value);
         if (e.target.value === 'personalizado') {
@@ -171,8 +169,8 @@ const HomeScreen = () => {
                 {days.map((dia, index) => (
                     <button
                         key={index}
-                        className={`btn me-2 ${diaSeleccionado === dia.name ? 'btn-primary' : 'btn-outline-primary'}`}
-                        onClick={() => setDiaSeleccionado(dia.name)}
+                        className={`btn me-2 ${diaSeleccionado === dia.key ? 'btn-primary' : 'btn-outline-primary'}`}
+                        onClick={() => setDiaSeleccionado(dia.key)}
                         style={{ minWidth: '80px' }}
                     >
                         <span className="d-none d-md-inline">{dia.fullName}</span>
@@ -182,7 +180,7 @@ const HomeScreen = () => {
             </div>
 
             <div className="text-center mb-4">
-                <h4>{days.find(dia => dia.name === diaSeleccionado)?.fullName || ''}</h4>
+                <h4>{days.find(dia => dia.key === diaSeleccionado)?.fullName || ''}</h4>
             </div>
 
             {loading ? (
@@ -295,7 +293,8 @@ const HomeScreen = () => {
             <NuevoEjercicioModal
                 show={modalShow}
                 handleClose={() => setModalShow(false)}
-                onSave={agregarEjercicio}
+                agregarEjercicio={agregarEjercicio}
+                diaSeleccionado={diaSeleccionado}
             />
         </div>
     );

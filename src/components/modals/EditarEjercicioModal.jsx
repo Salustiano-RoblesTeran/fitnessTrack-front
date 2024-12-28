@@ -10,8 +10,8 @@ const EditarEjercicioModal = ({ show, handleClose, ejercicio }) => {
         peso: '',
     });
 
-    const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
-    const gruposMusculares = ["Pecho (Pectorales)", "Espalda", "Piernas", "Hombros", "Bíceps", "Tríceps", "Core", "Pantorrilla (Gemelos)"];
+    const diasSemana = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+    const gruposMusculares = ["Pecho (Pectorales)", "Espalda", "Piernas", "Hombros", "Biceps", "Tríceps", "Core", "Pantorrilla (Gemelos)"];
 
     // Cargar los datos del ejercicio cuando se abre el modal
     useEffect(() => {

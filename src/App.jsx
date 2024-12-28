@@ -1,31 +1,39 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
-import ProtectedRoutes from './routes/ProtectedRoutes';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import RoutesApp from './routes/RoutesApp';
 import LoginScreen from './pages/LoginScreen';
+import RegisterScreen from './pages/RegisterScreen'; // Importamos la pantalla de registro
+import ProtectedRoutes from './routes/ProtectedRoutes';
 
 function App() {
-
-  const [login, setLogin] = useState(false)
+  const [login, setLogin] = useState(false);
 
   const cambiarLogin = () => {
-    setLogin(!login)
-  }
+    setLogin(!login); // Cambia el estado de login
+  };
 
   return (
-    <>
-    <BrowserRouter>
-        <Routes>
-          <Route path='/*' element={
-            <ProtectedRoutes login = {login}>
-              <RoutesApp cambiarLogin = {cambiarLogin}/>
+    <Router>
+      <Routes>
+        {/* Rutas protegidas */}
+        <Route
+          path="/*"
+          element={
+            <ProtectedRoutes login={login}>
+              <RoutesApp login={login} cambiarLogin={cambiarLogin} />
             </ProtectedRoutes>
-          }/>
-          <Route path="/login" element={<LoginScreen cambiarLogin= {cambiarLogin}/>} />
-        </Routes>
-    </BrowserRouter>
-    </>
-  )
+          }
+        />
+
+        {/* Ruta para login */}
+        <Route path="/login" element={<LoginScreen cambiarLogin={cambiarLogin} />} />
+
+        {/* Ruta para registro */}
+        <Route path="/register" element={<RegisterScreen />} /> {/* Ruta para registro */}
+
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
