@@ -154,16 +154,25 @@ const EditarEjercicioModal = ({ show, handleClose, ejercicio }) => {
                             <div className="mb-3">
                                 <label className="form-label">Peso (kg)</label>
                                 <input
-                                    type="number"
+                                    type="text" 
                                     name="peso"
                                     value={formData.peso}
-                                    onChange={handleChange}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        // Validar entrada: permitir números, puntos y comas
+                                        const validValue = value.replace(/[^0-9.,]/g, '');
+                                        setFormData({ ...formData, peso: validValue });
+                                    }}
+                                    onBlur={(e) => {
+                                        // Convertir automáticamente comas en puntos al salir del campo
+                                        const value = e.target.value.replace(',', '.');
+                                        setFormData({ ...formData, peso: value });
+                                    }}
                                     className="form-control"
-                                    min="1"
-                                    max="500"
                                     required
                                 />
                             </div>
+
                         </div>
 
                         <div className="modal-footer">
