@@ -302,6 +302,12 @@ const HomeScreen = () => {
                                     style={{ height: '300px', width: '60%', textAlign: 'center'}}  // Ajusta el tamaño (puedes modificar 'height' y 'width' a tu preferencia)
                                     />
 
+                                    <button
+                                        className="btn btn-success"
+                                        onClick={() => setModalActividadShow(true)}
+                                    >
+                                        Agregar Nueva Actividad
+                                    </button>
 
 
                                 {/* Mostrar distancias y tiempos */}
