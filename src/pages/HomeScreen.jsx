@@ -4,17 +4,19 @@ import NuevoEjercicioModal from '../components/modals/NuevoEjercicioModal';
 import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import AgregarActividadModal from '../components/modals/NuevaActividadModal';
 
 const HomeScreen = () => {
     const [diaSeleccionado, setDiaSeleccionado] = useState('');
     const [ejercicios, setEjercicios] = useState([]);
     const [loading, setLoading] = useState(false);
     const [modalShow, setModalShow] = useState(false);
+    const [modalActividadShow, setModalActividadShow] = useState(false);
     const [actividad, setActividad] = useState('Correr'); // Actividad predeterminada
-    const [distancias, setDistancias] = useState([]);
     const [rango, setRango] = useState('ultimaSemana');
     const [fechaInicio, setFechaInicio] = useState('');
     const [fechaFin, setFechaFin] = useState('');
+    const [distancias, setDistancias] = useState([]);
 
     const days = [
         { name: "Lun", fullName: "Lunes", key: "Lunes" },
@@ -108,18 +110,19 @@ const HomeScreen = () => {
             });
 
             const data = await response.json();
+            console.log(data);
 
             if (!response.ok) {
                 throw new Error(data.msg || 'Error al obtener datos');
             }
 
-            setDistancias(data.registros.map((registro) => ({
-                distancia: registro.distancia,
-                fecha: new Date(registro.fecha).toLocaleDateString()
-            })));
+            // Actualizamos las distancias con los datos que obtenemos
+            if (data.ok) {
+                setDistancias(data.registros);
+            }
+
         } catch (error) {
             console.error('Error al obtener datos:', error.message);
-            setDistancias([]);
         } finally {
             setLoading(false);
         }
@@ -131,6 +134,11 @@ const HomeScreen = () => {
         }
     }, [actividad]);
 
+    // Calcular la distancia total y el tiempo total
+    const distanciaTotal = distancias.reduce((acc, curr) => acc + curr.distancia, 0);
+    const tiempoTotal = distancias.reduce((acc, curr) => acc + curr.minutos, 0);
+
+    // Usando dayjs para convertir la fecha antes de pasarla a Date
     const data = {
         labels: distancias.map((registro) => registro.fecha),
         datasets: [
@@ -141,6 +149,8 @@ const HomeScreen = () => {
             },
         ],
     };
+
+    console.log(distancias);
 
     const handleRangoChange = (e) => {
         setRango(e.target.value);
@@ -277,25 +287,49 @@ const HomeScreen = () => {
                                     )}
                                 </div>
 
-
                                 <div className="mb-5" style={{ maxWidth: '800px', margin: '0 auto' }}>
                                     <Bar data={data} options={{
                                         responsive: true,
                                         maintainAspectRatio: false,
                                     }} />
                                 </div>
+
+                                {/* Estadísticas debajo de la gráfica */}
+                                <div className="text-center">
+                                    <h5>Estadísticas de {actividad}</h5>
+                                    <p><strong>Distancia Total:</strong> {distanciaTotal.toFixed(2)} km</p>
+                                    <p><strong>Tiempo Total:</strong> {tiempoTotal} Minutos</p>
+                                </div>
+
+                                {/* Botón para agregar actividad */}
+                                <div className="text-center mb-4">
+                                    <button
+                                        className="btn btn-success"
+                                        onClick={() => setModalActividadShow(true)}
+                                    >
+                                        Agregar Nueva Actividad
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     )}
                 </div>
             )}
-            
+
             <NuevoEjercicioModal
                 show={modalShow}
                 handleClose={() => setModalShow(false)}
                 agregarEjercicio={agregarEjercicio}
                 diaSeleccionado={diaSeleccionado}
             />
+            <AgregarActividadModal
+                show={modalActividadShow}
+                handleClose={() => {
+                    setModalActividadShow(false);
+                    obtenerDatosActividad(); // Actualiza los datos del gráfico
+                }}
+            />
+
         </div>
     );
 };
