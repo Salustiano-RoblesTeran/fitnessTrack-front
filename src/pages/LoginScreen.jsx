@@ -30,7 +30,6 @@ const LoginScreen = ({cambiarLogin}) => {
 
             const { token } = data;
             localStorage.setItem('x-token', token);
-            console.log(token);
 
             navigate('/');  // Redirigir a la pantalla principal
             cambiarLogin();

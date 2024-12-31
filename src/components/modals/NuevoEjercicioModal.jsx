@@ -48,7 +48,6 @@ const NuevoEjercicioModal = ({ show, handleClose, agregarEjercicio, diaSeleccion
                 body: JSON.stringify({
                     ...formData,
                     historialPesos: [{ peso: formData.peso }],
-                    usuarioId: localStorage.getItem('idUser')
                 })
             });
 

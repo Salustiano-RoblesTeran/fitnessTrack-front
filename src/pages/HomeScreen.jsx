@@ -123,7 +123,6 @@ const HomeScreen = () => {
             });
     
             const data = await response.json();
-            console.log('Datos de actividad:', data); // Verifica los datos obtenidos
     
             if (!response.ok) {
                 throw new Error(data.msg || 'Error al obtener datos');
@@ -175,7 +174,6 @@ const HomeScreen = () => {
 
     // Verificación de actividad y fechas
     useEffect(() => {
-        console.log('Actividad seleccionada:', actividad);
         obtenerDatosActividad();
     }, [actividad]);
 
