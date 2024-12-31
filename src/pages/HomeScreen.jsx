@@ -331,7 +331,10 @@ const HomeScreen = () => {
             {/* Modal para agregar actividad */}
             <AgregarActividadModal
                 show={modalActividadShow}
-                handleClose={() => setModalActividadShow(false)}
+                handleClose={() => {
+                    setModalActividadShow(false);
+                    obtenerDatosActividad();
+                }}
             />
         </div>
     );
