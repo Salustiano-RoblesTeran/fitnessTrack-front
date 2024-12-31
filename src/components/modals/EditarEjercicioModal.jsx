@@ -44,7 +44,7 @@ const EditarEjercicioModal = ({ show, handleClose, ejercicio }) => {
                 ? [{ peso: formData.peso }, ...ejercicio.historialPesos.slice(1)]
                 : [{ peso: formData.peso }];
             
-            const response = await fetch(`http://localhost:3000/api/ejercicio/${ejercicio._id}/actualizar`, {
+            const response = await fetch(`https://fitnesstrack-back.onrender.com/api/ejercicio/${ejercicio._id}/actualizar`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

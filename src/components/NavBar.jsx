@@ -68,7 +68,7 @@ const NavBar = () => {
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <div className="d-flex align-items-center ms-auto">
                         <img
-                            src={usuario.avatarUrl || 'https://via.placeholder.com/35'}
+                            src={usuario.avatarUrl}
                             alt="Usuario"
                             className="rounded-circle me-2"
                             width="35"

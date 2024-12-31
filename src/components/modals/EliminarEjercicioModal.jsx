@@ -18,8 +18,6 @@ const EliminarEjercicioModal = ({ show, handleClose, ejercicioId }) => {
 
         setLoading(true);
 
-        console.log(ejercicioId)
-
         try {
             const response = await fetch(`http://localhost:3000/api/ejercicio/${ejercicioId}/eliminar`, {
                 method: 'post',

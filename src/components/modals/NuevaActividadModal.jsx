@@ -59,8 +59,8 @@ const NuevoActividadModal = ({ show, handleClose }) => {
         try {
             const endpoint =
                 formData.tipoActividad === 'Correr'
-                    ? 'http://localhost:3000/api/actividad/correr'
-                    : 'http://localhost:3000/api/actividad/ciclismo';
+                    ? 'https://fitnesstrack-back.onrender.com/api/actividad/correr'
+                    : 'https://fitnesstrack-back.onrender.com/api/actividad/ciclismo';
 
             console.log(formData)
 

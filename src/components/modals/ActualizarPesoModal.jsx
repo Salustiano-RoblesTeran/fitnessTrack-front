@@ -28,7 +28,7 @@ const ActualizarPesoModal = ({ show, handleClose, ejercicioId }) => {
 
         const token = localStorage.getItem('x-token');
         try {
-            const response = await fetch(`http://localhost:3000/api/ejercicio/${ejercicioId}/agregar-peso`, {
+            const response = await fetch(`https://fitnesstrack-back.onrender.com/api/ejercicio/${ejercicioId}/agregar-peso`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

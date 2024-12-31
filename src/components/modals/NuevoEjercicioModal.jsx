@@ -39,7 +39,7 @@ const NuevoEjercicioModal = ({ show, handleClose, agregarEjercicio, diaSeleccion
 
         const token = localStorage.getItem('x-token');
         try {
-            const response = await fetch('http://localhost:3000/api/ejercicio/crear', {
+            const response = await fetch('https://fitnesstrack-back.onrender.com/api/ejercicio/crear', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

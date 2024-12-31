@@ -59,7 +59,7 @@ const HomeScreen = () => {
         setLoading(true);
 
         try {
-            const response = await fetch(`http://localhost:3000/api/ejercicio?dia=${diaKey}`, {
+            const response = await fetch(`https://fitnesstrack-back.onrender.com/api/ejercicio?dia=${diaKey}`, {
                 method: 'GET',
                 headers: {
                     'x-token': token
@@ -67,7 +67,6 @@ const HomeScreen = () => {
             });
 
             const data = await response.json();
-            console.log('Ejercicios obtenidos:', data); // Verifica los datos obtenidos
 
             if (!response.ok) {
                 throw new Error(data.msg || 'Error al obtener ejercicios');
@@ -112,8 +111,8 @@ const HomeScreen = () => {
             }
     
             const endpoint = actividad === 'Correr'
-                ? `http://localhost:3000/api/actividad/correr${query}`
-                : `http://localhost:3000/api/actividad/ciclismo${query}`;
+                ? `https://fitnesstrack-back.onrender.com/api/actividad/correr${query}`
+                : `https://fitnesstrack-back.onrender.com/api/actividad/ciclismo${query}`;
     
             const response = await fetch(endpoint, {
                 method: 'GET',
@@ -319,14 +318,14 @@ const HomeScreen = () => {
             {/* Modal para agregar ejercicio */}
             <NuevoEjercicioModal
                 show={modalShow}
-                onHide={() => setModalShow(false)}
+                handleClose={() => setModalShow(false)}
                 agregarEjercicio={agregarEjercicio}
             />
 
             {/* Modal para agregar actividad */}
             <AgregarActividadModal
                 show={modalActividadShow}
-                onHide={() => setModalActividadShow(false)}
+                handleClose={() => setModalActividadShow(false)}
             />
         </div>
     );

@@ -32,7 +32,7 @@ const EjercicioScreen = () => {
             setLoading(true);
 
             try {
-                const response = await fetch(`http://localhost:3000/api/ejercicio/${id}`, {
+                const response = await fetch(`https://fitnesstrack-back.onrender.com/api/ejercicio/${id}`, {
                     method: 'GET',
                     headers: {
                         'x-token': token,
