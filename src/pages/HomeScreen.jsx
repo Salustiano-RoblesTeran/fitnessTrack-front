@@ -21,7 +21,7 @@ const HomeScreen = () => {
     const days = [
         { name: "Lun", fullName: "Lunes", key: "Lunes" },
         { name: "Mar", fullName: "Martes", key: "Martes" },
-        { name: "Mié", fullName: "Miércoles", key: "Miercoles" },
+        { name: "Mié", fullName: "Miércoles", key: "Miércoles" },
         { name: "Jue", fullName: "Jueves", key: "Jueves" },
         { name: "Vie", fullName: "Viernes", key: "Viernes" },
         { name: "Sáb", fullName: "Sábado", key: "Sabado" },
@@ -31,6 +31,7 @@ const HomeScreen = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    // Resetear estado cuando se navega a Home
     useEffect(() => {
         if (location.pathname === '/') {
             setDiaSeleccionado('');
@@ -38,12 +39,14 @@ const HomeScreen = () => {
         }
     }, [location]);
 
+    // Obtener ejercicios al seleccionar un día
     useEffect(() => {
         if (diaSeleccionado) {
-            obtenerEjercicios(diaSeleccionado)
+            obtenerEjercicios(diaSeleccionado);
         }
     }, [diaSeleccionado]);
 
+    // Obtener ejercicios desde la API
     const obtenerEjercicios = async (diaKey) => {
         const token = localStorage.getItem('x-token');
 
@@ -64,6 +67,7 @@ const HomeScreen = () => {
             });
 
             const data = await response.json();
+            console.log('Ejercicios obtenidos:', data); // Verifica los datos obtenidos
 
             if (!response.ok) {
                 throw new Error(data.msg || 'Error al obtener ejercicios');
@@ -78,49 +82,58 @@ const HomeScreen = () => {
         }
     };
 
+    // Función para agregar un nuevo ejercicio
     const agregarEjercicio = (ejercicio) => {
         setEjercicios([...ejercicios, ejercicio]);
     };
 
+    // Redirigir al detalle del ejercicio
     const handleEjercicioClick = (ejercicioId) => {
         navigate(`/ejercicio/${ejercicioId}`);
     };
 
+    // Obtener datos de la actividad
     const obtenerDatosActividad = async () => {
         const token = localStorage.getItem('x-token');
-
+    
         if (!token) {
             console.error('No hay token disponible');
             window.location.href = '/login';
             return;
         }
-
+    
         setLoading(true);
-
+    
         try {
+            // Configura las fechas de inicio y fin según el rango seleccionado
+            let query = `?rango=${rango}`;
+            if (rango === 'personalizado') {
+                query += `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+            }
+    
             const endpoint = actividad === 'Correr'
-                ? 'http://localhost:3000/api/actividad/correr'
-                : 'http://localhost:3000/api/actividad/ciclismo';
-
+                ? `http://localhost:3000/api/actividad/correr${query}`
+                : `http://localhost:3000/api/actividad/ciclismo${query}`;
+    
             const response = await fetch(endpoint, {
                 method: 'GET',
                 headers: {
                     'x-token': token,
                 },
             });
-
+    
             const data = await response.json();
-            console.log(data);
-
+            console.log('Datos de actividad:', data); // Verifica los datos obtenidos
+    
             if (!response.ok) {
                 throw new Error(data.msg || 'Error al obtener datos');
             }
-
-            // Actualizamos las distancias con los datos que obtenemos
+    
+            // Actualizamos las distancias con los datos filtrados
             if (data.ok) {
                 setDistancias(data.registros);
             }
-
+    
         } catch (error) {
             console.error('Error al obtener datos:', error.message);
         } finally {
@@ -138,20 +151,20 @@ const HomeScreen = () => {
     const distanciaTotal = distancias.reduce((acc, curr) => acc + curr.distancia, 0);
     const tiempoTotal = distancias.reduce((acc, curr) => acc + curr.minutos, 0);
 
-    // Usando dayjs para convertir la fecha antes de pasarla a Date
+    // Configuración de la gráfica
     const data = {
-        labels: distancias.map((registro) => registro.fecha),
+        labels: distancias.map((registro) => registro.fecha).reverse(),
         datasets: [
             {
                 label: `${actividad} - Distancia (km)`,
-                data: distancias.map((registro) => registro.distancia),
+                data: distancias.map((registro) => registro.distancia).reverse(),
                 backgroundColor: 'rgba(75, 192, 192, 0.6)',
             },
         ],
     };
+    
 
-    console.log(distancias);
-
+    // Manejar cambio de rango (última semana, último mes, personalizado)
     const handleRangoChange = (e) => {
         setRango(e.target.value);
         if (e.target.value === 'personalizado') {
@@ -159,6 +172,12 @@ const HomeScreen = () => {
             setFechaFin('');
         }
     };
+
+    // Verificación de actividad y fechas
+    useEffect(() => {
+        console.log('Actividad seleccionada:', actividad);
+        obtenerDatosActividad();
+    }, [actividad]);
 
     return (
         <div className="container mt-5">
@@ -254,61 +273,44 @@ const HomeScreen = () => {
                                         value={rango} 
                                         onChange={handleRangoChange}
                                     >
-                                        <option value="ultimaSemana">Última Semana</option>
-                                        <option value="ultimoMes">Último Mes</option>
+                                        <option value="ultimaSemana">Última semana</option>
+                                        <option value="ultimoMes">Último mes</option>
                                         <option value="personalizado">Personalizado</option>
                                     </select>
-                                </div>
 
-                                {/* Mostrar fechas solo si se elige 'Personalizado' */}
-                                <div className="d-flex gap-3 mb-3" style={{ justifyContent: 'center' }}>
                                     {rango === 'personalizado' && (
-                                        <div style={{ width: '150px' }}>
-                                            <label>Fecha de Inicio</label>
+                                        <div className="mt-3">
                                             <input 
                                                 type="date" 
-                                                className="form-control" 
-                                                value={fechaInicio} 
-                                                onChange={(e) => setFechaInicio(e.target.value)} 
+                                                className="form-control mb-2"
+                                                value={fechaInicio}
+                                                onChange={(e) => setFechaInicio(e.target.value)}
                                             />
-                                        </div>
-                                    )}
-
-                                    {rango === 'personalizado' && (
-                                        <div style={{ width: '150px' }}>
-                                            <label>Fecha de Fin</label>
                                             <input 
                                                 type="date" 
-                                                className="form-control" 
-                                                value={fechaFin} 
-                                                onChange={(e) => setFechaFin(e.target.value)} 
+                                                className="form-control"
+                                                value={fechaFin}
+                                                onChange={(e) => setFechaFin(e.target.value)}
                                             />
                                         </div>
                                     )}
                                 </div>
 
-                                <div className="mb-5" style={{ maxWidth: '800px', margin: '0 auto' }}>
-                                    <Bar data={data} options={{
-                                        responsive: true,
-                                        maintainAspectRatio: false,
-                                    }} />
-                                </div>
+                                {/* Mostrar gráfica */}
+                                <Bar
+                                    data={data}
+                                    options={{
+                                        
+                                    }}
+                                    style={{ height: '300px', width: '60%', textAlign: 'center'}}  // Ajusta el tamaño (puedes modificar 'height' y 'width' a tu preferencia)
+                                    />
 
-                                {/* Estadísticas debajo de la gráfica */}
-                                <div className="text-center">
-                                    <h5>Estadísticas de {actividad}</h5>
-                                    <p><strong>Distancia Total:</strong> {distanciaTotal.toFixed(2)} km</p>
-                                    <p><strong>Tiempo Total:</strong> {tiempoTotal} Minutos</p>
-                                </div>
 
-                                {/* Botón para agregar actividad */}
-                                <div className="text-center mb-4">
-                                    <button
-                                        className="btn btn-success"
-                                        onClick={() => setModalActividadShow(true)}
-                                    >
-                                        Agregar Nueva Actividad
-                                    </button>
+
+                                {/* Mostrar distancias y tiempos */}
+                                <div className="mt-4">
+                                    <p>Total Distancia: {distanciaTotal} km</p>
+                                    <p>Total Tiempo: {tiempoTotal} min</p>
                                 </div>
                             </div>
                         </div>
@@ -316,20 +318,18 @@ const HomeScreen = () => {
                 </div>
             )}
 
+            {/* Modal para agregar ejercicio */}
             <NuevoEjercicioModal
                 show={modalShow}
-                handleClose={() => setModalShow(false)}
+                onHide={() => setModalShow(false)}
                 agregarEjercicio={agregarEjercicio}
-                diaSeleccionado={diaSeleccionado}
-            />
-            <AgregarActividadModal
-                show={modalActividadShow}
-                handleClose={() => {
-                    setModalActividadShow(false);
-                    obtenerDatosActividad(); // Actualiza los datos del gráfico
-                }}
             />
 
+            {/* Modal para agregar actividad */}
+            <AgregarActividadModal
+                show={modalActividadShow}
+                onHide={() => setModalActividadShow(false)}
+            />
         </div>
     );
 };
