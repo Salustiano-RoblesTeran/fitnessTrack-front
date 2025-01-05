@@ -16,7 +16,7 @@ const NavBar = () => {
             }
 
             try {
-                const response = await fetch('http://localhost:3000/api/auth', {
+                const response = await fetch('https://fitnesstrack-back.onrender.com/api/auth', {
                     method: 'GET',
                     headers: {
                         'x-token': token,
