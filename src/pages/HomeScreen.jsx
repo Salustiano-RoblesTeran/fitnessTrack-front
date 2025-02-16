@@ -21,7 +21,7 @@ const HomeScreen = () => {
     const days = [
         { name: "Lun", fullName: "Lunes", key: "Lunes" },
         { name: "Mar", fullName: "Martes", key: "Martes" },
-        { name: "Mié", fullName: "Miércoles", key: "Miércoles" },
+        { name: "Mié", fullName: "Miércoles", key: "Miercoles" },
         { name: "Jue", fullName: "Jueves", key: "Jueves" },
         { name: "Vie", fullName: "Viernes", key: "Viernes" },
         { name: "Sáb", fullName: "Sábado", key: "Sabado" },
