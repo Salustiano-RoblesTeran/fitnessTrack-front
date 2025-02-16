@@ -19,7 +19,7 @@ const EliminarEjercicioModal = ({ show, handleClose, ejercicioId }) => {
         setLoading(true);
 
         try {
-            const response = await fetch(`http://localhost:3000/api/ejercicio/${ejercicioId}/eliminar`, {
+            const response = await fetch(`https://fitnesstrack-back.onrender.com/api/ejercicio/${ejercicioId}/eliminar`, {
                 method: 'post',
                 headers: {
                     'x-token': token,
