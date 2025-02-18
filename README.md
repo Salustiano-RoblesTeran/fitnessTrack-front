@@ -1,120 +1,124 @@
-# FitnessTrack
+# **FitnessTrack 🏅**  
 
-FitnessTrack es una aplicación diseñada para ayudarte a gestionar tu rutina de ejercicios, realizar un seguimiento de tus progresos y mantenerte motivado. Puedes iniciar sesión, agregar ejercicios a tu rutina, modificar los pesos levantados y visualizar tu progreso a través de gráficos. Además, puedes registrar actividades como correr o hacer ciclismo, y ver detalles sobre la distancia recorrida y el tiempo invertido.
+**FitnessTrack** es una aplicación diseñada para ayudarte a gestionar tu rutina de ejercicios, hacer un seguimiento de tus progresos y mantenerte motivado.  
 
----
-
-## 🛠️ Despliegue
-La aplicación está desplegada en **Netlify**.
-
-## ⚠️ Importante
-La primera solicitud puede tardar un poco más en responder, ya que está alojada en Netlify con un plan gratuito.
-
-⏳ **¡Gracias por tu paciencia!** 😄
+📌 **Características principales:**  
+✔ Agrega y personaliza tu rutina de ejercicios.  
+✔ Registra el peso levantado y visualiza tu progreso en gráficos.  
+✔ Realiza un seguimiento de actividades como correr o andar en bicicleta.  
+✔ Interfaz intuitiva y fácil de usar.  
 
 ---
 
-## 🌟 Características
+## 🌍 **Despliegue en Producción**  
+La aplicación está disponible en **Netlify** y puedes acceder desde aquí:  
 
-### 💪 Funcionalidades para Usuario
+🔗 [**FitnessTrack en Netlify**](https://fitnesstracksalu.netlify.app/)  
 
-#### 📊 Seguimiento de Ejercicios:
-- Puedes agregar ejercicios a tu rutina, especificar los pesos y realizar cambios cuando sea necesario.
-- Visualización de tu progreso mediante gráficos interactivos.
+⚠ **Nota:** La primera solicitud puede tardar unos segundos en responder debido al plan gratuito de Netlify.  
 
-#### 🏃 Actividad Física:
-- Registra actividades como correr o hacer ciclismo.
-- Especifica la distancia recorrida (en kilómetros) y el tiempo invertido.
-
-#### 📝 Gestión de Rutinas:
-- Crea y organiza rutinas de ejercicio para mejorar tu rendimiento físico a lo largo del tiempo.
+⏳ **¡Gracias por tu paciencia!** 😊  
 
 ---
 
-### 👤 Funcionalidades para Usuarios no Logueados
+## 🌟 **Características y Funcionalidades**  
 
-#### 🔒 Inicio de Sesión:
-- Los usuarios deben iniciar sesión para poder acceder a las funcionalidades principales.
+### 💪 **Gestión de Ejercicios**  
+- Agrega ejercicios a tu rutina y actualiza los pesos levantados.  
+- Modifica y organiza tus rutinas fácilmente.  
+- Visualización del progreso a través de gráficos interactivos.  
+
+### 🏃 **Seguimiento de Actividades**  
+- Registra actividades como correr o andar en bicicleta.  
+- Ingresa la distancia recorrida y el tiempo empleado.  
+
+### 📊 **Visualización del Progreso**  
+- Estadísticas detalladas con gráficos para evaluar tu rendimiento.  
+- Comparación de pesos levantados a lo largo del tiempo.  
 
 ---
 
-## 💻 Stack Tecnológico
+## 🎨 **Capturas de Pantalla**  
 
-- **Frontend:** React, Bootstrap, React-Bootstrap, React-Router-Dom, Chart.js, React-Chartjs-2
-- **Backend:** Node.js, Express.js (Ver repositorio de backend en [FitnessTrack-Back](https://github.com/Salustiano-RoblesTeran/fitnessTrack-back))
-- **Autenticación y Seguridad:** JWT (JSON Web Tokens)
-- **Desarrollo:** Vite, ESLint
-- **Gráficos:** Chart.js
+### 🔒 **Inicio de Sesión**  
+📷 ![Iniciar Sesión](src/assets/pasos/iniciarSesion.png)  
+
+### 🏠 **Pantalla Principal**  
+📷 ![Home](src/assets/pasos/home.png)  
+
+### 📊 **Seguimiento de Actividades**  
+📷 ![Actividad](src/assets/pasos/agregarActividad.png)  
+
+### 🏋️ **Rutina de Ejercicios**  
+📷 ![Rutina](src/assets/pasos/rutina.png)  
+
+### 📊 **Gráficos de Progreso**  
+📷 ![Progreso](src/assets/pasos/agregarPeso.png)  
 
 ---
 
-## 🔄 Instalación
+## 🛠️ **Tecnologías Utilizadas**  
 
-### 🚀 Ejecución
+| Tecnología  | Descripción  |
+|------------|-------------|
+| **Frontend** | React, Bootstrap, React-Bootstrap, React-Router-Dom, Chart.js, React-Chartjs-2 |
+| **Backend**  | Node.js, Express.js |
+| **Autenticación**  | JSON Web Tokens (JWT) |
+| **Gráficos**  | Chart.js |
 
-#### Frontend
-1. Clona el repositorio del frontend:
-   ```bash
-   git clone https://github.com/Salustiano-RoblesTeran/fitnessTrack-frontend.git
-   ```
-2. Instala las dependencias:
-   ```bash
-   npm install
-   ```
-3. Inicia la aplicación en modo desarrollo:
-   ```bash
-   npm run dev
-   ```
+🔗 Repositorio del backend: [**FitnessTrack-Back**](https://github.com/Salustiano-RoblesTeran/fitnessTrack-back)  
 
-#### Backend
-1. Clona el repositorio del backend:
-   ```bash
-   git clone https://github.com/Salustiano-RoblesTeran/fitnessTrack-back.git
-   ```
-2. Instala las dependencias del backend:
-   ```bash
-   npm install
-   ```
-3. Inicia el servidor del backend:
-   ```bash
-   npm run server
-   ```
+---
 
-### Otros comandos de ejecución
+## 🚀 **Instalación y Ejecución**  
 
+### 🛠️ **Requisitos previos**  
+Antes de comenzar, asegúrate de tener instalado:  
+- **Node.js**  
+- **NPM** (Node Package Manager)  
+
+### 🏢 **Instalación**  
+
+#### **Frontend**  
 ```bash
-npm run build
+git clone https://github.com/Salustiano-RoblesTeran/fitnessTrack-frontend.git
+cd fitnessTrack-frontend
+npm install
+npm run dev
 ```
-Construye los archivos optimizados para producción.
 
+#### **Backend**  
 ```bash
-npm run preview
+git clone https://github.com/Salustiano-RoblesTeran/fitnessTrack-back.git
+cd fitnessTrack-back
+npm install
+npm run server
 ```
-Inicia la vista previa de la aplicación en el entorno de producción.
-
-```bash
-npm run lint
-```
-Realiza el análisis de código con **ESLint** para asegurar la calidad del código.
 
 ---
 
-## 🛠️ Contribuciones
-Si deseas contribuir al proyecto, no dudes en enviar un **pull request** o reportar problemas en el repositorio.
+## 📒 **Comandos  Ú tiles**  
+
+| Comando  | Descripción  |
+|----------|-------------|
+| `npm run build`  | Construye la aplicación para producción. |
+| `npm run preview` | Previsualiza la aplicación en producción. |
+| `npm run lint` | Ejecuta **ESLint** para asegurar la calidad del código. |
 
 ---
 
-Gracias por tu interés en **FitnessTrack**.
-
-✨ **Mantente en forma y sigue tu progreso.** ✨
+## 🛠️ **Contribuciones**  
+Si deseas contribuir al proyecto, puedes:  
+✅ Abrir un **issue** para reportar problemas o sugerencias.  
+✅ Enviar un **pull request** con mejoras o nuevas funcionalidades.  
 
 ---
 
-📞 Contacto
+## 📩 **Contacto**  
 
-Desarrollador: Salustiano Robles Terán  
-Email: saluroblesteran@gmail.com  
-Web: saluroblesteran.com  
+👨‍💻 **Desarrollador:** Salustiano Robles Terán  
+📧 **Email:** saluroblesteran@gmail.com  
+🌐 **Web:** [saluroblesteran.com](https://saluroblesteran.com)  
 
-Gracias por tu interés en **FitnessTrack**.  
-✨ **Mantén tu motivación y mejora tu rendimiento físico.** ✨
+📌 **¡Gracias por tu interés en FitnessTrack!**  
+💪 **Sigue entrenando y mejora tu rendimiento.** 💪  
