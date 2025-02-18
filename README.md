@@ -41,19 +41,19 @@ La aplicación está disponible en **Netlify** y puedes acceder desde aquí:
 ## 🎨 **Capturas de Pantalla**  
 
 ### 🔒 **Inicio de Sesión**  
-📷 ![Iniciar Sesión](src/assets/pasos/iniciarSesion.png)  
+![Iniciar Sesión](src/assets/pasos/iniciarSesion.png)  
 
 ### 🏠 **Pantalla Principal**  
-📷 ![Home](src/assets/pasos/home.png)  
+![Home](src/assets/pasos/home.png)  
 
 ### 📊 **Seguimiento de Actividades**  
-📷 ![Actividad](src/assets/pasos/agregarActividad.png)  
+![Actividad](src/assets/pasos/agregarActividad.png)  
 
 ### 🏋️ **Rutina de Ejercicios**  
-📷 ![Rutina](src/assets/pasos/rutina.png)  
+![Rutina](src/assets/pasos/rutina.png)  
 
 ### 📊 **Gráficos de Progreso**  
-📷 ![Progreso](src/assets/pasos/agregarPeso.png)  
+![Progreso](src/assets/pasos/agregarPeso.png)  
 
 ---
 
